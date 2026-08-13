@@ -27,7 +27,7 @@ class MongoConnection {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             });
-
+            this.connection = mongoose.connection;
             logger.info('MongoDB connected successfully');
 
             this.connection.on('error', (err) => {
