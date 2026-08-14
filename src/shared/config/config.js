@@ -8,7 +8,7 @@ const config = {
 
     // MondoDB
     mongo: {
-        uri: process.env.MONGO_URL || 'mondodb://localhost:27017/api_monitoring',
+        uri: process.env.MONGO_URL || 'mongodb://localhost:27017/api_monitoring',
         dbName: process.env.MONGO_DB_name || 'api_monitoring'
     },
 
