@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import config from "./config";
-import logger from "./logger";
+import config from "./config.js";
+import logger from "./logger.js";
 
 /**
  * MongoDB Connection Class
@@ -23,9 +23,7 @@ class MongoConnection {
             }
 
             await mongoose.connect(config.mongo.uri, {
-                dbName: config.mongo.dbName,
-                useNewUrlParser: true,
-                useUnifiedTopology: true
+                dbName: config.mongo.dbName
             });
             this.connection = mongoose.connection;
             logger.info('MongoDB connected successfully');

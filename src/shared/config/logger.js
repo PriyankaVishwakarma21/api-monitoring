@@ -1,5 +1,5 @@
 import winston from "winston";
-import config from './config';
+import config from './config.js';
 
 /**
  * Winston Logger Configuration
@@ -22,7 +22,7 @@ const logger = winston.createLogger({
 
 if (config !== 'prod') {
     logger.add(new winston.transports.Console({
-        format: winston.combine(
+        format: winston.format.combine(
             winston.format.colorize(),
             winston.format.simple()
         )

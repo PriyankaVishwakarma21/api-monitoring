@@ -1,6 +1,6 @@
 import winston from 'winston';
-import config from './config';
-import logger from './logger';
+import config from './config.js';
+import logger from './logger.js';
 import pg from 'pg';
 
 const { Pool } = pg;

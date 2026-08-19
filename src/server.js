@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import config from './shared/config/config.js';
-import logger from './shared/utils/logger.js';
+import logger from './shared/config/logger.js';
 import mongodb from './shared/config/mongodb.js';
 import postgres from './shared/config/postgres.js';
 import rabbitmq from './shared/config/rabbitmq.js';
@@ -77,7 +77,7 @@ async function initializeConnections() {
 
     } catch (err) {
         logger.error('Error initializing connections: ', err);
-        next(err);
+        throw err;
     }
 }
 
