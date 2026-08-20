@@ -89,7 +89,7 @@ async function startServer() {
         const server = app.listen(config.port, () => {
             logger.info(`Server is running on port ${config.port}`);
             logger.info(`Environment: ${config.node_env}`);
-            logger.infor(`API available at: http://localhost:${config.port}`);
+            logger.info(`API available at: http://localhost:${config.port}`);
         });
         const gracefulShutdown = async (signal) => {
             logger.info(`${signal} received. shutdown gracefully.`);
