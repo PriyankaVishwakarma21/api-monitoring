@@ -40,6 +40,12 @@ const config = {
     rateLimt: {
         windowMS: parseInt(process.env.RATE_LIMIT_WINDOWS_MS || '90000', 10), //15 minutes in ms
         maxRequest: parseInt(process.env.RATE_LIMIT_MAX_REQUEST || '1000', 10)// 1000 req / 15 min per IP
+    },
+
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV == 'prod',
+        maxAge: 24 * 60 * 60 * 1000
     }
 }
 

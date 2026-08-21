@@ -37,17 +37,17 @@ app.get('/health', (req, res) => {
         'Service is healthy'))
 });
 
-app.use('/', (req, res) => {
-    res.status(404).json(ResponseFormatter.success({
-        service: 'API Hit Monitoring Service',
-        version: '1.0.0',
-        endpoints: {
-            health: '/health',
-            apiHits: 'api/api-hits',
-            auth: 'api/auth',
-            analytics: 'api/analytics'
-        }
-    }, 'API Hit Monitoring Service'));
+app.get('/', (req, res) => {
+    res.status(200).json(ResponseFormatter.success({
+            service: 'API Hit Monitoring Service',
+            version: '1.0.0',
+            endpoints: {
+                health: '/health',
+                apiHits: '/api/api-hits',
+                auth: '/api/auth',
+                analytics: '/api/analytics'
+            }
+        }, 'API Hit Monitoring Service'));
 });
 
 /**
@@ -85,7 +85,7 @@ async function initializeConnections() {
 async function startServer() {
     try {
         await initializeConnections();
-
+        
         const server = app.listen(config.port, () => {
             logger.info(`Server is running on port ${config.port}`);
             logger.info(`Environment: ${config.node_env}`);
@@ -114,20 +114,20 @@ async function startServer() {
                 process.exit(1);
             }, 10000); // 10 seconds timeout
 
+        };
 
-            process.on('SIGTERM', () => gracefulShutdown('SIGTERM')); // singnal Terminate
-            process.on('SIGINT', () => gracefulShutdown('SIGINT '));
+        process.on('SIGTERM', () => gracefulShutdown('SIGTERM')); // singnal Terminate
+        process.on('SIGINT', () => gracefulShutdown('SIGINT '));
 
-            process.on('uncaughtException', (error) => {
-                logger.error('Uncaught Exceotion: ', error);
-                gracefulShutdown('uncaughtException');
-            })
+        process.on('uncaughtException', (error) => {
+            logger.error('Uncaught Exceotion: ', error);
+            gracefulShutdown('uncaughtException');
+        })
 
-            process.on('unhandledRejection', (reason, promise) => {
-                logger.error('Unhandled Rejection at: ', promise, 'reason: ', reason);
-                gracefulShutdown('unhandledRejection');
-            })
-        }
+        process.on('unhandledRejection', (reason, promise) => {
+            logger.error('Unhandled Rejection at: ', promise, 'reason: ', reason);
+            gracefulShutdown('unhandledRejection');
+        })
     } catch (err) {
         logger.error('Error starting server: ', err);
         process.exit(1);
