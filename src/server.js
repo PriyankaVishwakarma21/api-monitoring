@@ -10,10 +10,18 @@ import postgres from './shared/config/postgres.js';
 import rabbitmq from './shared/config/rabbitmq.js';
 import errorHandler from './shared/middleware/errorHandler.js';
 import ResponseFormatter from './shared/utils/responseFormatter.js';
+import cookieParser from 'cookie-parser';
+
+// Routers 
+import authRouter from './services/auth/routes/authRouter.js';
 
 const app = express();
 app.use(helmet()); // use helmet to secure the app by setting various HTTP headers
-app.use(cors()); // enable CORS for all routes
+app.use(cors({
+    origin: true,
+    credentials: true
+})); // enable CORS for all routes
+app.use(cookieParser())
 app.use(express.json()); // parse incoming requests with JSON payloads
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -49,6 +57,8 @@ app.get('/', (req, res) => {
             }
         }, 'API Hit Monitoring Service'));
 });
+
+app.use('/api/auth', authRouter);
 
 /**
  * 404 Error handler for undefined routes.

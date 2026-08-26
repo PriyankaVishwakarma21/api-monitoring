@@ -1,4 +1,4 @@
-import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import AppError from '../../../shared/utils/AppError.js'
 import config from '../../../shared/config/config.js';
 import logger from '../../../shared/config/logger.js';
@@ -31,17 +31,40 @@ export class AuthService {
     async onboardSuperAdmin(superAdminData) {
         try {
             const existingUser = await this.userRepository.findAll()
-
+            
             if (existingUser && existingUser.length > 0) {
                 throw new AppError('Super admin onboarding is disabled', 403)
             }
             const user = await this.userRepository.create(superAdminData);
-            const token = this.generateToken()
+            const token = this.generateToken(user)
 
             logger.info('Admin onboarded successfully', { username: user.username })
             return { user: this.formateUserForResponse(user), token }
         } catch (error) {
             logger.error('Error while onboarding super admin', error);
+            throw error;
+        }
+    }
+
+    async register(data) {
+        try {
+            const existingUser = await this.userRepository.findByUsername(data.username);
+            if (existingUser) {
+                throw new AppError('Username already exist', 409)
+            }
+
+            const existingUserWithEmail = await this.userRepository.findByEmail(data.email);
+            if (existingUserWithEmail) {
+                throw new AppError('Email already exist', 409)
+            }
+
+            const user = await this.userRepository.create(data);
+            const token = this.generateToken(user)
+
+            logger.info('Admin onboarded successfully', { username: user.username })
+            return { user: this.formateUserForResponse(user), token }
+        } catch (error) {
+            logger.error('Error while register ', error);
             throw error;
         }
     }

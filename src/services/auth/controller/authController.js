@@ -29,4 +29,23 @@ export class AuthController {
             next(error);
         }
     }
+
+    async register(req, res, next) {
+        try {
+            const { username, email, password, role } = req.body;
+            const userData = {
+                username, email, password, role: role || APPLICATION_ROLES.CLIENT_VIEWER
+            }
+            const { user, token } = await this.authService.register(userData);
+            res.cookie('authToken', token, {
+                httpOnly: config.cookie.httpOnly,
+                secure: config.cookie.secure,
+                maxAge: config.cookie.maxAge
+            })
+
+            res.status(201).json(ResponseFormatter.success(user, "Register successfully", 201))
+        } catch (error) {
+            next(error);
+        }
+    }
 }
