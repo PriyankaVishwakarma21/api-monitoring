@@ -48,4 +48,40 @@ export class AuthController {
             next(error);
         }
     }
+
+    async login(req, res, next) {
+        try {
+            const { username, password } = req.body;
+            const { user, token } = await this.authService.login(username, password);
+            res.cookie('authToken', token, {
+                httpOnly: config.cookie.httpOnly,
+                secure: config.cookie.secure,
+                maxAge: config.cookie.maxAge
+            })
+
+            res.status(200).json(ResponseFormatter.success(user, "Logged in successfully", 200))
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getProfile(req, res, next) {
+        try {
+            const userId = req.user.userId;
+            const user = await this.authService.getProfile(userId);
+
+            res.status(200).json(ResponseFormatter.success(user, "Profile Fetched successfully", 200));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async logout(req, res, next) {
+        try {
+            res.clearCookie("authToken");
+            res.status(200).json(ResponseFormatter.success({}, "Logout successfully", 200));
+        } catch (error) {
+            next(error);
+        }
+    }
 }
