@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import AppError from '../../../shared/utils/AppError.js'
 import config from '../../../shared/config/config.js';
 import logger from '../../../shared/config/logger.js';
+import { APPLICATION_ROLES } from "../../../shared/constant/role.js"
 import bcrypt from 'bcryptjs';
 
 export class AuthService {
@@ -101,6 +102,17 @@ export class AuthService {
             return this.formateUserForResponse(user);
         } catch (error) {
             logger.error('Error while getting userProfile ', error);
+            throw error;
+        }
+    }
+
+    async checkSuperAdminPermissions(userId) {
+        try {
+            const user = await this.userRepository.findById(userId);
+            if (!user) throw new AppError("User not Found", 404);
+            return user.role == APPLICATION_ROLES.SUPER_ADMIN;
+        } catch (error) {
+            logger.error('Error while checking super admin permissions ', error);
             throw error;
         }
     }

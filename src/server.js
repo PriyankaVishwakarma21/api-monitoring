@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser';
 
 // Routers 
 import authRouter from './services/auth/routes/authRouter.js';
+import clientRouter from './services/client/routes/clientRoutes.js';
 
 const app = express();
 app.use(helmet()); // use helmet to secure the app by setting various HTTP headers
@@ -59,6 +60,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api', clientRouter);
 
 /**
  * 404 Error handler for undefined routes.
