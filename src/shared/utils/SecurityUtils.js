@@ -67,3 +67,5 @@ class SecurityUtils {
         return { success: errors.length === 0, errors };
     }
 }
+
+export default SecurityUtils;
