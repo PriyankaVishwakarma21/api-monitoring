@@ -59,7 +59,7 @@ class MongooUserRepository extends BaseRepository {
         }
     }
 
-    async findByAll() {
+    async findAll() {
         try {
             const user = await this.model.find({ isActive: true }).select("-password");
             return user;
@@ -69,3 +69,5 @@ class MongooUserRepository extends BaseRepository {
         }
     }
 }
+
+export default new MongooUserRepository();

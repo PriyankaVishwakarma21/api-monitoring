@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         validate: {
             validator: function (p) {
-                if (this.isModified('password') && password && !password.startsWith('$2b$')) {
+                if (this.isModified('password') && p && !p.startsWith('$2b$')) {
                     const { success } = SecurityUtils.validatePassword(p);
                     return success;
                 }
@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
         enum: ['super_admin', 'client_admin', 'client_viewer'],
         default: 'client_viewer '
     },
-    clinetId: {
+    clientId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Client',
         required: function () {
@@ -99,11 +99,10 @@ userSchema.pre('save', async function (next) {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
     }
-    next();
 });
 
 // indexes are used to fasten the search queries and to ensure uniqueness of the fields. In this case, we are creating a compound index on clinetId and isActive fields to ensure that there can be only one active user per client.
-userSchema.index({ clinetId: 1, isActive: 1 }, { unique: true });
+userSchema.index({ clientId: 1, isActive: 1 }, { unique: true });
 userSchema.index({ role: 1 }, { unique: true });
 
 const User = mongoose.model('User', userSchema);

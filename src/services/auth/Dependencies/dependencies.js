@@ -1,6 +1,7 @@
 import { AuthController } from "../controller/authController.js";
 import { AuthService } from "../service/authService.js";
 import MongoUserRepository from "../repository/UserRepository.js"
+import ClientController from "../../client/controller/clientController.js";
 
 /**
  * Dependency Injection Container for the Auth module.
