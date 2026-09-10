@@ -1,5 +1,5 @@
-import { EVENT_TYPES } from './eventContracts.js';
-import { isRetryable } from './procedures/retryStrategy.js';
+import { EVENT_TYPES } from '../eventContracts.js';
+import { isRetryable } from './RetryStrategy.js';
 
 export class EventProducer {
     constructor({ channelManager, circuitBreaker, retryStrategy, logger, queueName = 'events' }) {
