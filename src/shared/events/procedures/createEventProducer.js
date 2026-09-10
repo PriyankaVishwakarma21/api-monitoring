@@ -1,22 +1,22 @@
-import config from '../../shared/config/config.js';
-import logger from '../../shared/logger/logger.js';
+import config from '../../config/config.js';
+import logger from '../../config/logger.js';
 import rabitmq from '../../config/rabbitmq.js';
 
-import { CircuitBreaker } from '../../shared/events/procedures/circuitBreaker.js';
-import { RetryStrategy } from '../../shared/events/procedures/retryStrategy.js';
-import { EventProducer } from '../../shared/events/procedures/eventProducer.js';
-import { ConfirmChannelManager } from '../../shared/events/procedures/confirmationChannelManager.js';
+import { CircuitBreaker } from './CircuitBreaker.js';
+import { RetryStrategy } from './RetryStrategy.js';
+import { EventProducer } from './eventProducer.js';
+import { ConfirmChannelManager } from './ConfirmChannelManager.js';
 
 // Factory Design Pattern to create an EventProducer instance with default or overridden dependencies
 export function createEventProducer(overrides = {}) {
     const log = overrides.logger || logger;
     const rmq = overrides.rabitmq || rabitmq;
-    const queueName = overrides.queueName || config.rabbitmq.queueName;
+    const queueName = overrides.queueName || config.rabbitmq.queue;
 
     // Validate required dependencies
     if (!rmq) throw new Error("Rabbitmq connection manager is requied to create EventProducer");
     if (!queueName) throw new Error("Queue name is required to create EventProducer");
-    if (!config.rabbitmq.retryStrategy || config.rabbitmq.retryStrategy < 0) throw new Error("Invalid retry attempts configuration. retryStrategy must be a non-negative integer.");
+    if (!config.rabbitmq.retryAttempts || config.rabbitmq.retryAttempts < 0) throw new Error("Invalid retry attempts configuration. retryStrategy must be a non-negative integer.");
 
     const channelManager = overrides.channelManager ?? new ConfirmChannelManager({ rabbitmq: rmq, queueName, logger: log });
     const circuitBreaker = overrides.circuitBreaker ?? new CircuitBreaker({

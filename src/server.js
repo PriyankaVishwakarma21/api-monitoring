@@ -15,6 +15,7 @@ import cookieParser from 'cookie-parser';
 // Routers 
 import authRouter from './services/auth/routes/authRouter.js';
 import clientRouter from './services/client/routes/clientRoutes.js';
+import ingestRouter from './services/ingest/routes/ingestRoute.js';
 
 const app = express();
 app.use(helmet()); // use helmet to secure the app by setting various HTTP headers
@@ -60,6 +61,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/hit', ingestRouter);
 app.use('/api', clientRouter);
 
 /**
